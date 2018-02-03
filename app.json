@@ -1,0 +1,8 @@
+{
+    "name": "Carpooling Node.js",
+    "description": "Node.js carpooling app",
+    "repository": "https://github.com/florrup/carpooling-server-test",
+    "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
+    "keywords": [ "node", "express", "heroku" ],
+    "image": "heroku/nodejs"
+}
