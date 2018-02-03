@@ -1,6 +1,5 @@
 {
   "name": "carpooling-server-test",
-  "version": "0.1",
   "description": "Node.js carpooling app",
   "engines": {
     "node": "8.9.1"

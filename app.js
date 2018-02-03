@@ -2,8 +2,10 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+var routes = require('./routes/');
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
+const HOSTNAME = 'localhost';
 
 var app = express();
 
@@ -17,7 +19,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
 
-app.get('/', (req, res) => res.render('pages/index'));
+app.use(routes);
 
-app.listen(PORT, () => console.log(`Listening on ${PORT }`));
+app.listen(PORT, HOSTNAME, function () {
+    console.log(`Listening on ${PORT}`)
+});
+
+module.exports = app;
 
