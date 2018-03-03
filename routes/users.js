@@ -7,22 +7,22 @@ userRouter.use(bodyParser.json());
 
 var User = require('../controllers/userController');
 
-userRouter.route('/')
-    .get(Verify.verifyOrdinaryUser, User.getAllUsers)
-    //.post(User.postNewUser)
-    .delete(User.deleteAllUsers);
-
 userRouter.route('/register')
     .post(User.postNewUser);
 
 userRouter.route('/login')
     .post(User.loginUser);
 
+userRouter.route('/')
+    .get(Verify.verifyOrdinaryUser, User.getAllUsers)
+    //.post(User.postNewUser)
+    .delete(User.deleteAllUsers);
+
 userRouter.route('/logout')
     .post(User.logoutUser);
 
 userRouter.route('/:userId')
-    .get(User.getUser)
+    .get(Verify.verifyOrdinaryUser, User.getUser)
     .put(User.modifyUser)
     .delete(User.deleteUser);
 

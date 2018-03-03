@@ -13,51 +13,35 @@ exports.getAllUsers = function (req, res) {
 };
 
 exports.postNewUser = function (req, res) {
-    console.log("Enter postNewUser");
-    Users.register(new Users({ username: req.body.username, age: req.body.age }), req.body.password, function (err, user) {
-        console.log("Entered the register endpoint");
+    Users.register(new Users({ username: req.body.username }), req.body.password, function (err, user) {
         if (err) {
             return res.status(500).json({ err: err });
         }
-        console.log("No error");
         passport.authenticate('local')(req, res, function () {
-            console.log("Entered the passport auth method");
             return res.status(200).json({ status: 'Registration successful' });
         });
     });
-
-    /*
-    var newUser = new Users(req.body);
-    newUser.save(function (err, user) {
-        if (err) {
-            res.send(err);
-        }
-        res.writeHead(200, {
-            'Content-Type': 'text/plain'
-        });
-        res.end('User ' + user.username + ' created!\n');
-    });
-    */
 };
 
 exports.loginUser = function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) {
-            return next(err);
+            return next(err); // will generate a 500 error
         }
         if (!user) {
             return res.status(401).json({
                 err: info
             });
         }
-        req.logIn(user, function (err) {
+
+        req.login(user, function (err) {
             if (err) {
                 return res.status(500).json({
                     err: 'Could not log in user'
                 });
             }
 
-            var token = Verify.getToken(user);
+            var token = Verify.getToken(user.toJSON()); // need to convert the user object
             res.status(200).json({
                 status: 'Login successful!',
                 success: true,
@@ -66,39 +50,6 @@ exports.loginUser = function (req, res, next) {
         });
     })(req, res, next);
 };
-
-/*
-exports.loginUser = function (req, res, next) {
-    passport.authenticate('local', function (err, user, info) {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            return res.status(401).json({
-                err: info
-            });
-        }
-        req.logIn(user, function (err) {
-            if (err) {
-                console.log("THERE HAS BEEN AN ERROR WHILE LOGGING IN");
-                return res.status(500).json({
-                    err: 'Could not log in user'
-                });
-            }
-
-            console.log('User in users ' + user);
-
-            var token = Verify.getToken(user);
-
-            res.status(200).json({
-                status: 'Login successful',
-                success: true,
-                token: token
-            });
-        });
-    })(req, res, next);
-};
-*/
 
 exports.logoutUser = function (req, res) {
     req.logout();

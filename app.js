@@ -8,8 +8,6 @@ var LocalStrategy = require('passport-local').Strategy;
 // Initiate connection to MongoDB server using Mongoose
 var mongoose = require('mongoose');
 var config = require('./config');
-//var url = 'mongodb://localhost:27017/conFusion'; // conFusion is the name of the db
-//mongoose.connect(url);
 mongoose.connect(config.mongoUrl);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -31,18 +29,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Passport config
-var Users = require('./models/users');
+var User = require('./models/users');
 app.use(passport.initialize());
-
-passport.use(new LocalStrategy(Users.authenticate()));
-passport.serializeUser(Users.serializeUser());
-passport.deserializeUser(Users.deserializeUser());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use('/', routes);
 app.use('/users', users);

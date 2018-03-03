@@ -10,9 +10,6 @@ var userSchema = new Schema({
     },
     password: {
         type: String
-    },
-    age: {
-        type: Number
     }
 });
 
